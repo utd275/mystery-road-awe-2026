@@ -162,18 +162,20 @@ function formatDate(ts) {
     " " + d.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" });
 }
 
-function getStatusBadgeClass(status) {
+// Changed to arrow function for exercise 10
+const getStatusBadgeClass = (status) => {
   var s = (status || "").toLowerCase();
   if (s === "reviewed") return "badge-reviewed";
   if (s === "flagged") return "badge-flagged";
   return "badge-unreviewed";
-}
+};
 
-function getRelevanceBadgeClass(relevance) {
+// Changed to arrow function for exercise 10
+const getRelevanceBadgeClass = (relevance) => {
   var r = (relevance || "").toLowerCase();
   if (r === "relevant") return "badge-relevant";
   return "badge-unreviewed";
-}
+};
 
 // ---------------------------------------------------------------------
 // NAVIGATION / HASH ROUTING
@@ -1059,8 +1061,9 @@ function setupEventListeners() {
   document.getElementById("timelinePersonFilter").addEventListener("change", renderTimeline);
   document.getElementById("timelineLocationFilter").addEventListener("change", renderTimeline);
   document.getElementById("timelineTypeFilter").addEventListener("change", renderTimeline);
-
-  document.getElementById("hypConfidence").addEventListener("input", function (e) {
+  
+  //Change the callback for exercise 10:
+  document.getElementById("hypConfidence").addEventListener("input", (e) => {
     document.getElementById("hypConfidenceValue").textContent = e.target.value;
   });
 }
