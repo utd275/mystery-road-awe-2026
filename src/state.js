@@ -79,6 +79,10 @@ export function setLoadingStepsRemaining(value) {
   loadingStepsRemaining = value;
 }
 
+export function setEvidenceViewLoading(value) {
+  evidenceViewLoading = value;
+}
+
 export function setNotesStore(value) {
   notesStore = value;
 }

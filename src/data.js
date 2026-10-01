@@ -7,7 +7,8 @@ import {
   setAllLocations,
   setAllTimeline,
   setCaseData,
-  setLoadingStepsRemaining
+  setLoadingStepsRemaining,
+  setEvidenceViewLoading
 } from "./state.js";
 
 import { renderDashboard } from "./views/dashboard.js";
@@ -85,6 +86,7 @@ function loadEvidenceData() {
     })
     .then(function (data) {
       setAllEvidence(data);
+      setEvidenceViewLoading(false);
 
       applyStoredBookmarkFlags();
 

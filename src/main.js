@@ -60,9 +60,9 @@ function setupEventListeners() {
   var navButtons = document.querySelectorAll(".nav-btn");
 
   for (var i = 0; i < navButtons.length; i++) {
-    navButtons[i].addEventListener("click", function () {
+    navButtons[i].addEventListener("click", function (e) {
       var targetView =
-        navButtons[i].getAttribute("data-view");
+        e.currentTarget.getAttribute("data-view");
 
       console.log("nav clicked:", targetView);
     });
