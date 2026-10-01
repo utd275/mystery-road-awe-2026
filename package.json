@@ -1,0 +1,10 @@
+{
+  "name": "mystery-road-awe-2026",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Project ReMotion investigation portal for Advanced Web Engineering",
+  "type": "module",
+  "devDependencies": {
+    "vite": "^8.3.1"
+  }
+}
