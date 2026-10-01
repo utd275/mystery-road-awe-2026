@@ -6,5 +6,8 @@
   "type": "module",
   "devDependencies": {
     "vite": "^8.3.1"
+  },
+  "scripts": {
+    "dev": "vite"
   }
 }
