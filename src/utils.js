@@ -27,10 +27,7 @@ export function findLocationById(id) {
 
 export function evidenceMentionsPerson(ev, person) {
   if (!ev.personIds) return false;
-  return (
-    ev.personIds.indexOf(person.id) !== -1 ||
-    ev.personIds.indexOf(person.name) !== -1
-  );
+  return ev.personIds.indexOf(person.id) !== -1;
 }
 
 export function formatDate(ts) {

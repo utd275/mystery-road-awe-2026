@@ -1,3 +1,11 @@
+import type {
+  CaseData,
+  Evidence,
+  Location,
+  Person,
+  TimelineEvent,
+} from "./types.js";
+
 import {
   currentPage,
   loadingStepsRemaining,
@@ -23,11 +31,24 @@ import { populateTimelineDropdowns, renderTimeline } from "./views/timeline.js";
 
 import { populateHypothesisDropdowns } from "./views/workspace.js";
 
+async function fetchJson<T>(url: string): Promise<T> {
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error("Failed to load " + url + ": " + response.status);
+  }
+
+  const data: unknown = await response.json();
+
+  return data as T;
+}
+
+
 // ---------------------------------------------------------------------
 // DATA LOADING
 // ---------------------------------------------------------------------
 
-function showLoadingOverlay(msg) {
+function showLoadingOverlay(msg: string) {
   var overlay = document.getElementById("loadingOverlay");
   var text = document.getElementById("loadingText");
 
@@ -53,34 +74,28 @@ function populateAllDropdowns() {
 }
 
 function loadCorePeopleAndLocations() {
-  return fetch("data/case.json").then(function (caseRes) {
-    return caseRes.json().then(function (caseJson) {
-      setCaseData(caseJson);
+  return fetchJson<CaseData>("data/case.json").then(function (caseJson) {
+    setCaseData(caseJson);
 
-      return fetch("data/people.json").then(function (peopleRes) {
-        return peopleRes.json().then(function (peopleJson) {
-          setAllPeople(peopleJson);
+    return fetchJson<Person[]>("data/people.json").then(function (peopleJson) {
+      setAllPeople(peopleJson);
 
-          return fetch("data/locations.json").then(function (locationsRes) {
-            return locationsRes.json().then(function (locationsJson) {
-              setAllLocations(locationsJson);
+      return fetchJson<Location[]>("data/locations.json").then(function (
+        locationsJson,
+      ) {
+        setAllLocations(locationsJson);
 
-              hideLoadingStep();
-              renderDashboard();
-              populateAllDropdowns();
-            });
-          });
-        });
+        hideLoadingStep();
+        renderDashboard();
+        populateAllDropdowns();
       });
     });
   });
 }
 
+
 function loadEvidenceData() {
-  fetch("data/evidence.json")
-    .then(function (res) {
-      return res.json();
-    })
+  fetchJson<Evidence[]>("data/evidence.json")
     .then(function (data) {
       setAllEvidence(data);
       setEvidenceViewLoading(false);
@@ -103,10 +118,7 @@ function loadEvidenceData() {
 }
 
 function loadTimelineData() {
-  return fetch("data/timeline.json")
-    .then(function (res) {
-      return res.json();
-    })
+  return fetchJson<TimelineEvent[]>("data/timeline.json")
     .then(function (data) {
       setAllTimeline(data);
 
