@@ -351,7 +351,7 @@ export function handleSearchInput(event) {
   var requestId = ++latestSearchRequestId;
 
   simulateAsyncSearch(term).then(function () {
-    // paramter resolvedTerm is not used, so I removed it for Ex2 Demo4
+    // parameter resolvedTerm is not used, so I removed it for Ex2 Demo4
     // Only apply this response if nothing newer
     // has been typed meanwhile.
     if (requestId !== latestSearchRequestId) return;
