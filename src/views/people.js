@@ -2,16 +2,12 @@ import {
   allEvidence,
   allPeople,
   allLocations,
-  setCurrentPeopleTab
+  setCurrentPeopleTab,
 } from "../state.js";
 
-import {
-  evidenceMentionsPerson
-} from "../utils.js";
+import { evidenceMentionsPerson } from "../utils.js";
 
-import {
-  renderEvidenceList
-} from "./evidence.js";
+import { renderEvidenceList } from "./evidence.js";
 
 // ---------------------------------------------------------------------
 // PEOPLE & LOCATIONS
@@ -80,10 +76,7 @@ export function renderPeople() {
 
     html += "</div>";
 
-    html +=
-      "<p><strong>Speciality:</strong> " +
-      person.speciality +
-      "</p>";
+    html += "<p><strong>Speciality:</strong> " + person.speciality + "</p>";
 
     html += "<ul>";
 
@@ -96,7 +89,7 @@ export function renderPeople() {
     html +=
       '<div class="person-statement">&ldquo;' +
       person.statement +
-      '&rdquo;</div>';
+      "&rdquo;</div>";
 
     html +=
       "<p>" +
@@ -119,11 +112,9 @@ export function renderPeople() {
 
   for (var l = 0; l < links.length; l++) {
     links[l].addEventListener("click", function (e) {
-      var personId =
-        e.target.getAttribute("data-person-id");
+      var personId = e.target.getAttribute("data-person-id");
 
-      document.getElementById("filterPerson").value =
-        personId;
+      document.getElementById("filterPerson").value = personId;
 
       // Equivalent to the old navigateTo("evidence"):
       // navigateTo only changed window.location.hash.
@@ -145,17 +136,11 @@ export function renderLocations() {
 
     html += '<div class="location-card">';
 
-    html +=
-      "<h3>" +
-      loc.id +
-      " &mdash; " +
-      loc.name +
-      "</h3>";
+    html += "<h3>" + loc.id + " &mdash; " + loc.name + "</h3>";
 
     html += "<p>" + loc.description + "</p>";
 
-    html +=
-      "<p><strong>Contains:</strong></p><ul>";
+    html += "<p><strong>Contains:</strong></p><ul>";
 
     for (var c = 0; c < loc.contains.length; c++) {
       html += "<li>" + loc.contains[c] + "</li>";

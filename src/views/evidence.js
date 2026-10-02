@@ -9,7 +9,7 @@ import {
   viewRendered,
   setFilteredEvidence,
   setBookmarks,
-  setSelectedEvidence
+  setSelectedEvidence,
 } from "../state.js";
 
 import {
@@ -19,13 +19,13 @@ import {
   evidenceMentionsPerson,
   formatDate,
   getStatusBadgeClass,
-  getRelevanceBadgeClass
+  getRelevanceBadgeClass,
 } from "../utils.js";
 
 import {
   saveBookmarksToStorage,
   loadNoteForEvidence,
-  saveNoteForEvidence
+  saveNoteForEvidence,
 } from "../storage.js";
 
 // ---------------------------------------------------------------------
@@ -53,11 +53,7 @@ export function populateEvidenceDropdowns() {
 
   for (var ti = 0; ti < types.length; ti++) {
     typeSelect.innerHTML +=
-      '<option value="' +
-      types[ti] +
-      '">' +
-      types[ti] +
-      "</option>";
+      '<option value="' + types[ti] + '">' + types[ti] + "</option>";
   }
 
   personSelect.innerHTML = '<option value="">All people</option>';
@@ -87,9 +83,7 @@ export function populateEvidenceDropdowns() {
 
 function getFilteredEvidence() {
   var searchBox = document.getElementById("evidenceSearch");
-  var searchTerm = searchBox
-    ? searchBox.value.toLowerCase().trim()
-    : "";
+  var searchTerm = searchBox ? searchBox.value.toLowerCase().trim() : "";
 
   var typeVal = document.getElementById("filterType").value;
   var personVal = document.getElementById("filterPerson").value;
@@ -117,11 +111,7 @@ function getFilteredEvidence() {
       }
     }
 
-    if (
-      matches &&
-      typeVal &&
-      item.type.toLowerCase() !== typeVal
-    ) {
+    if (matches && typeVal && item.type.toLowerCase() !== typeVal) {
       matches = false;
     }
 
@@ -172,8 +162,7 @@ export function renderEvidenceList() {
 
   if (!container) return;
 
-  var loadingIndicator =
-    document.getElementById("evidenceLoadingIndicator");
+  var loadingIndicator = document.getElementById("evidenceLoadingIndicator");
 
   if (evidenceViewLoading) {
     if (loadingIndicator) {
@@ -209,10 +198,7 @@ export function renderEvidenceList() {
 function renderEvidenceCardHTML(ev) {
   var isBookmarked = bookmarks.indexOf(ev.id) !== -1;
 
-  var html =
-    '<div class="evidence-card" data-id="' +
-    ev.id +
-    '">';
+  var html = '<div class="evidence-card" data-id="' + ev.id + '">';
 
   html +=
     '<button class="bookmark-btn ' +
@@ -236,14 +222,10 @@ function renderEvidenceCardHTML(ev) {
     formatDate(ev.timestamp) +
     "</div>";
 
-  html +=
-    '<div class="evidence-summary">' +
-    ev.summary +
-    "</div>";
+  html += '<div class="evidence-summary">' + ev.summary + "</div>";
 
   if (ev.tags.indexOf("critical") !== -1) {
-    html +=
-      '<span class="badge badge-critical">Critical</span>';
+    html += '<span class="badge badge-critical">Critical</span>';
   }
 
   html +=
@@ -263,10 +245,7 @@ function renderEvidenceCardHTML(ev) {
   html += "<div>";
 
   for (var t = 0; t < ev.tags.length; t++) {
-    html +=
-      '<span class="tag-chip">' +
-      ev.tags[t] +
-      "</span>";
+    html += '<span class="tag-chip">' + ev.tags[t] + "</span>";
   }
 
   html += "</div>";
@@ -278,10 +257,7 @@ function renderEvidenceCardHTML(ev) {
 function handleEvidenceListClick(event) {
   var target = event.target;
 
-  if (
-    target.dataset &&
-    target.dataset.action === "bookmark"
-  ) {
+  if (target.dataset && target.dataset.action === "bookmark") {
     event.stopPropagation();
     handleBookmarkClick(target.dataset.id);
     return;
@@ -306,7 +282,7 @@ function handleBookmarkClick(evidenceId) {
     setBookmarks(
       bookmarks.filter(function (id) {
         return id !== evidenceId;
-      })
+      }),
     );
 
     ev.bookmarked = false;
@@ -321,14 +297,12 @@ function handleBookmarkClick(evidenceId) {
 
 export function applyStoredBookmarkFlags() {
   for (var i = 0; i < allEvidence.length; i++) {
-    allEvidence[i].bookmarked =
-      bookmarks.indexOf(allEvidence[i].id) !== -1;
+    allEvidence[i].bookmarked = bookmarks.indexOf(allEvidence[i].id) !== -1;
   }
 }
 
 export function handleSortChange() {
-  var sortValue =
-    document.getElementById("sortEvidence").value;
+  var sortValue = document.getElementById("sortEvidence").value;
 
   if (sortValue === "title-asc") {
     filteredEvidence.sort(function (a, b) {
@@ -376,7 +350,8 @@ export function handleSearchInput(event) {
   var term = event.target.value;
   var requestId = ++latestSearchRequestId;
 
-  simulateAsyncSearch(term).then(function (resolvedTerm) {
+  simulateAsyncSearch(term).then(function () {
+    // paramter resolvedTerm is not used, so I removed it for Ex2 Demo4
     // Only apply this response if nothing newer
     // has been typed meanwhile.
     if (requestId !== latestSearchRequestId) return;
@@ -396,8 +371,7 @@ export function openEvidenceDetail(evidenceId) {
 
   setSelectedEvidence(ev);
 
-  var section =
-    document.getElementById("evidenceDetailSection");
+  var section = document.getElementById("evidenceDetailSection");
 
   section.classList.remove("hidden");
 
@@ -405,13 +379,12 @@ export function openEvidenceDetail(evidenceId) {
 
   section.scrollIntoView({
     behavior: "smooth",
-    block: "start"
+    block: "start",
   });
 }
 
 export function closeEvidenceDetail() {
-  var section =
-    document.getElementById("evidenceDetailSection");
+  var section = document.getElementById("evidenceDetailSection");
 
   section.classList.add("hidden");
   section.innerHTML = "";
@@ -420,17 +393,14 @@ export function closeEvidenceDetail() {
 }
 
 function renderEvidenceDetail(ev) {
-  var section =
-    document.getElementById("evidenceDetailSection");
+  var section = document.getElementById("evidenceDetailSection");
 
   var personNames = [];
 
   for (var p = 0; p < ev.personIds.length; p++) {
     var person = findPersonById(ev.personIds[p]);
 
-    personNames.push(
-      person ? person.name : ev.personIds[p]
-    );
+    personNames.push(person ? person.name : ev.personIds[p]);
   }
 
   var locationNames = [];
@@ -438,20 +408,13 @@ function renderEvidenceDetail(ev) {
   for (var l = 0; l < ev.locationIds.length; l++) {
     var loc = findLocationById(ev.locationIds[l]);
 
-    locationNames.push(
-      loc
-        ? loc.id + " - " + loc.name
-        : ev.locationIds[l]
-    );
+    locationNames.push(loc ? loc.id + " - " + loc.name : ev.locationIds[l]);
   }
 
   var tagsHtml = "";
 
   for (var t = 0; t < ev.tags.length; t++) {
-    tagsHtml +=
-      '<span class="tag-chip">' +
-      ev.tags[t] +
-      "</span>";
+    tagsHtml += '<span class="tag-chip">' + ev.tags[t] + "</span>";
   }
 
   var storedNote = loadNoteForEvidence(ev.id);
@@ -460,10 +423,7 @@ function renderEvidenceDetail(ev) {
 
   html += '<div class="evidence-detail-header">';
 
-  html +=
-    "<div><h2>" +
-    ev.title +
-    "</h2>";
+  html += "<div><h2>" + ev.title + "</h2>";
 
   html +=
     '<div class="evidence-meta">' +
@@ -489,10 +449,7 @@ function renderEvidenceDetail(ev) {
     ev.summary +
     "</div>";
 
-  html +=
-    '<div class="evidence-detail-content">' +
-    ev.content +
-    "</div>";
+  html += '<div class="evidence-detail-content">' + ev.content + "</div>";
 
   html +=
     '<div class="detail-field"><strong>Related people</strong>' +
@@ -505,62 +462,33 @@ function renderEvidenceDetail(ev) {
     "</div>";
 
   html +=
-    '<div class="detail-field"><strong>Tags</strong>' +
-    tagsHtml +
-    "</div>";
+    '<div class="detail-field"><strong>Tags</strong>' + tagsHtml + "</div>";
 
-  html +=
-    '<div class="detail-field"><strong>Review status</strong>';
+  html += '<div class="detail-field"><strong>Review status</strong>';
 
   html += '<select id="detailStatusSelect">';
 
-  html += statusOptionHTML(
-    ev.status,
-    "unreviewed",
-    "Unreviewed"
-  );
+  html += statusOptionHTML(ev.status, "unreviewed", "Unreviewed");
 
-  html += statusOptionHTML(
-    ev.status,
-    "reviewed",
-    "Reviewed"
-  );
+  html += statusOptionHTML(ev.status, "reviewed", "Reviewed");
 
-  html += statusOptionHTML(
-    ev.status,
-    "flagged",
-    "Flagged"
-  );
+  html += statusOptionHTML(ev.status, "flagged", "Flagged");
 
   html += "</select></div>";
 
-  html +=
-    '<div class="detail-field"><strong>Relevance</strong>';
+  html += '<div class="detail-field"><strong>Relevance</strong>';
 
   html += '<select id="detailRelevanceSelect">';
 
-  html += statusOptionHTML(
-    ev.relevance,
-    "unknown",
-    "Unknown"
-  );
+  html += statusOptionHTML(ev.relevance, "unknown", "Unknown");
 
-  html += statusOptionHTML(
-    ev.relevance,
-    "relevant",
-    "Relevant"
-  );
+  html += statusOptionHTML(ev.relevance, "relevant", "Relevant");
 
-  html += statusOptionHTML(
-    ev.relevance,
-    "irrelevant",
-    "Irrelevant"
-  );
+  html += statusOptionHTML(ev.relevance, "irrelevant", "Irrelevant");
 
   html += "</select></div>";
 
-  html +=
-    '<div class="detail-field"><strong>Investigator note</strong>';
+  html += '<div class="detail-field"><strong>Investigator note</strong>';
 
   html +=
     '<textarea id="evidenceNoteInput" class="note-textarea" rows="3" data-evidence-id="' +
@@ -607,38 +535,25 @@ function renderEvidenceDetail(ev) {
 }
 
 function statusOptionHTML(current, value, label) {
-  var currentLower =
-    (current || "").toLowerCase();
+  var currentLower = (current || "").toLowerCase();
 
-  var selected =
-    currentLower === value ? " selected" : "";
+  var selected = currentLower === value ? " selected" : "";
 
-  return (
-    '<option value="' +
-    value +
-    '"' +
-    selected +
-    ">" +
-    label +
-    "</option>"
-  );
+  return '<option value="' + value + '"' + selected + ">" + label + "</option>";
 }
 
 export function saveCurrentNote() {
-  var textarea =
-    document.getElementById("evidenceNoteInput");
+  var textarea = document.getElementById("evidenceNoteInput");
 
   if (!textarea) return;
 
-  var evidenceId =
-    textarea.getAttribute("data-evidence-id");
+  var evidenceId = textarea.getAttribute("data-evidence-id");
 
   var text = textarea.value;
 
   saveNoteForEvidence(evidenceId, text);
 
-  var preview =
-    document.getElementById("notePreview");
+  var preview = document.getElementById("notePreview");
 
   if (preview) {
     preview.innerHTML = text;

@@ -1,16 +1,8 @@
-import {
-  allEvidence,
-  allPeople,
-  notesStore
-} from "../state.js";
+import { allEvidence, allPeople, notesStore } from "../state.js";
 
-import {
-  STORAGE_KEY_HYPOTHESIS
-} from "../storage.js";
+import { STORAGE_KEY_HYPOTHESIS } from "../storage.js";
 
-import {
-  openEvidenceDetail
-} from "./evidence.js";
+import { openEvidenceDetail } from "./evidence.js";
 
 // ---------------------------------------------------------------------
 // WORKSPACE
@@ -55,8 +47,7 @@ function renderBookmarksList() {
 
   container.innerHTML = html;
 
-  var openButtons =
-    container.querySelectorAll("[data-open-evidence]");
+  var openButtons = container.querySelectorAll("[data-open-evidence]");
 
   for (var b = 0; b < openButtons.length; b++) {
     openButtons[b].addEventListener("click", function (e) {
@@ -64,8 +55,7 @@ function renderBookmarksList() {
       // but avoids importing navigation.js here.
       window.location.hash = "evidence";
 
-      var id =
-        e.target.getAttribute("data-open-evidence");
+      var id = e.target.getAttribute("data-open-evidence");
 
       setTimeout(function () {
         openEvidenceDetail(id);
@@ -89,7 +79,7 @@ function renderNotesList() {
         index: i,
         evidenceId: allEvidence[i].id,
         title: allEvidence[i].title,
-        text: note
+        text: note,
       });
     }
   }
@@ -112,29 +102,22 @@ function renderNotesList() {
       entry.title;
 
     html +=
-      '<div id="noteText-' +
-      entry.index +
-      '">' +
-      entry.text +
-      "</div></div>";
+      '<div id="noteText-' + entry.index + '">' + entry.text + "</div></div>";
   }
 
   container.innerHTML = html;
 }
 
 export function populateHypothesisDropdowns() {
-  var suspectSelect =
-    document.getElementById("hypSuspect");
+  var suspectSelect = document.getElementById("hypSuspect");
 
-  var evidenceSelect =
-    document.getElementById("hypEvidence");
+  var evidenceSelect = document.getElementById("hypEvidence");
 
   if (!suspectSelect || !evidenceSelect) return;
 
   var currentSuspect = suspectSelect.value;
 
-  suspectSelect.innerHTML =
-    '<option value="">Select a person…</option>';
+  suspectSelect.innerHTML = '<option value="">Select a person…</option>';
 
   for (var p = 0; p < allPeople.length; p++) {
     suspectSelect.innerHTML +=
@@ -163,49 +146,32 @@ export function populateHypothesisDropdowns() {
 
 export function saveHypothesis() {
   var draft = {
-    suspectId:
-      document.getElementById("hypSuspect").value,
+    suspectId: document.getElementById("hypSuspect").value,
 
-    nature:
-      document.getElementById("hypNature").value,
+    nature: document.getElementById("hypNature").value,
 
-    evidenceIds:
-      getSelectedOptions(
-        document.getElementById("hypEvidence")
-      ),
+    evidenceIds: getSelectedOptions(document.getElementById("hypEvidence")),
 
-    confidence:
-      document.getElementById("hypConfidence").value,
+    confidence: document.getElementById("hypConfidence").value,
 
-    explanation:
-      document.getElementById("hypExplanation").value,
+    explanation: document.getElementById("hypExplanation").value,
 
-    alternative:
-      document.getElementById("hypAlternative").value,
+    alternative: document.getElementById("hypAlternative").value,
 
-    savedAt: new Date().toISOString()
+    savedAt: new Date().toISOString(),
   };
 
   try {
-    localStorage.setItem(
-      STORAGE_KEY_HYPOTHESIS,
-      JSON.stringify(draft)
-    );
+    localStorage.setItem(STORAGE_KEY_HYPOTHESIS, JSON.stringify(draft));
   } catch (err) {
-    console.error(
-      "Could not save hypothesis draft",
-      err
-    );
+    console.error("Could not save hypothesis draft", err);
 
-    alert(
-      "Your hypothesis could not be saved to local storage."
-    );
+    alert("Your hypothesis could not be saved to local storage.");
 
     return;
   }
 
-  var msg =
-    document.getElementById("hypothesisSavedMsg");
+  var msg = document.getElementById("hypothesisSavedMsg");
 
   msg.classList.remove("hidden");
 
@@ -227,46 +193,31 @@ function getSelectedOptions(selectEl) {
 }
 
 function loadHypothesisFromStorage() {
-  var raw =
-    localStorage.getItem(STORAGE_KEY_HYPOTHESIS);
+  var raw = localStorage.getItem(STORAGE_KEY_HYPOTHESIS);
 
   if (!raw) return;
 
   var draft = JSON.parse(raw);
 
-  document.getElementById("hypSuspect").value =
-    draft.suspectId || "";
+  document.getElementById("hypSuspect").value = draft.suspectId || "";
 
-  document.getElementById("hypNature").value =
-    draft.nature || "";
+  document.getElementById("hypNature").value = draft.nature || "";
 
-  document.getElementById("hypConfidence").value =
+  document.getElementById("hypConfidence").value = draft.confidence || 50;
+
+  document.getElementById("hypConfidenceValue").textContent =
     draft.confidence || 50;
 
-  document.getElementById(
-    "hypConfidenceValue"
-  ).textContent =
-    draft.confidence || 50;
+  document.getElementById("hypExplanation").value = draft.explanation || "";
 
-  document.getElementById("hypExplanation").value =
-    draft.explanation || "";
+  document.getElementById("hypAlternative").value = draft.alternative || "";
 
-  document.getElementById("hypAlternative").value =
-    draft.alternative || "";
-
-  var evidenceSelect =
-    document.getElementById("hypEvidence");
+  var evidenceSelect = document.getElementById("hypEvidence");
 
   var savedIds = draft.evidenceIds || [];
 
-  for (
-    var i = 0;
-    i < evidenceSelect.options.length;
-    i++
-  ) {
+  for (var i = 0; i < evidenceSelect.options.length; i++) {
     evidenceSelect.options[i].selected =
-      savedIds.indexOf(
-        evidenceSelect.options[i].value
-      ) !== -1;
+      savedIds.indexOf(evidenceSelect.options[i].value) !== -1;
   }
 }

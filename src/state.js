@@ -23,13 +23,11 @@ export var viewRendered = {
   evidence: false,
   people: false,
   timeline: false,
-  workspace: false
+  workspace: false,
 };
 
 export var notesStore = {};
 export var modalCloseListenerCount = 0;
-
-
 
 // ---------------------------------------------------------------------
 // STATE UPDATE FUNCTIONS

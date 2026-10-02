@@ -27,7 +27,10 @@ export function findLocationById(id) {
 
 export function evidenceMentionsPerson(ev, person) {
   if (!ev.personIds) return false;
-  return ev.personIds.indexOf(person.id) !== -1 || ev.personIds.indexOf(person.name) !== -1;
+  return (
+    ev.personIds.indexOf(person.id) !== -1 ||
+    ev.personIds.indexOf(person.name) !== -1
+  );
 }
 
 export function formatDate(ts) {
@@ -41,12 +44,12 @@ export function formatDate(ts) {
     d.toLocaleDateString(undefined, {
       year: "numeric",
       month: "short",
-      day: "numeric"
+      day: "numeric",
     }) +
     " " +
     d.toLocaleTimeString(undefined, {
       hour: "2-digit",
-      minute: "2-digit"
+      minute: "2-digit",
     })
   );
 }

@@ -1,9 +1,4 @@
-import {
-  bookmarks,
-  notesStore,
-  setBookmarks,
-  setNotesStore
-} from "./state.js";
+import { bookmarks, notesStore, setBookmarks, setNotesStore } from "./state.js";
 
 // ---------------------------------------------------------------------
 // LOCAL STORAGE KEYS

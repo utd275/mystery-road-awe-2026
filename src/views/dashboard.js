@@ -4,13 +4,10 @@ import {
   allLocations,
   allTimeline,
   caseData,
-  bookmarks
+  bookmarks,
 } from "../state.js";
 
-import {
-  formatDate,
-  getStatusBadgeClass
-} from "../utils.js";
+import { formatDate, getStatusBadgeClass } from "../utils.js";
 
 // ---------------------------------------------------------------------
 // DASHBOARD
@@ -22,7 +19,8 @@ export function renderDashboard() {
 
   var reviewedCount = 0;
   for (var i = 0; i < allEvidence.length; i++) {
-    if ((allEvidence[i].status || "").toLowerCase() === "reviewed") reviewedCount++;
+    if ((allEvidence[i].status || "").toLowerCase() === "reviewed")
+      reviewedCount++;
   }
 
   var progressPct =

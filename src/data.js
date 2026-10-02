@@ -8,7 +8,7 @@ import {
   setAllTimeline,
   setCaseData,
   setLoadingStepsRemaining,
-  setEvidenceViewLoading
+  setEvidenceViewLoading,
 } from "./state.js";
 
 import { renderDashboard } from "./views/dashboard.js";
@@ -16,13 +16,10 @@ import { renderDashboard } from "./views/dashboard.js";
 import {
   applyStoredBookmarkFlags,
   populateEvidenceDropdowns,
-  renderEvidenceList
+  renderEvidenceList,
 } from "./views/evidence.js";
 
-import {
-  populateTimelineDropdowns,
-  renderTimeline
-} from "./views/timeline.js";
+import { populateTimelineDropdowns, renderTimeline } from "./views/timeline.js";
 
 import { populateHypothesisDropdowns } from "./views/workspace.js";
 

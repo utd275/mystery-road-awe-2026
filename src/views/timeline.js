@@ -3,18 +3,12 @@ import {
   allLocations,
   allTimeline,
   modalCloseListenerCount,
-  incrementModalCloseListenerCount
+  incrementModalCloseListenerCount,
 } from "../state.js";
 
-import {
-  findEvidenceById,
-  findLocationById,
-  formatDate
-} from "../utils.js";
+import { findEvidenceById, findLocationById, formatDate } from "../utils.js";
 
-import {
-  openEvidenceDetail
-} from "./evidence.js";
+import { openEvidenceDetail } from "./evidence.js";
 
 // ---------------------------------------------------------------------
 // TIMELINE
@@ -57,16 +51,11 @@ export function populateTimelineDropdowns() {
     }
   }
 
-  typeSelect.innerHTML =
-    '<option value="">All event types</option>';
+  typeSelect.innerHTML = '<option value="">All event types</option>';
 
   for (var t = 0; t < types.length; t++) {
     typeSelect.innerHTML +=
-      '<option value="' +
-      types[t] +
-      '">' +
-      types[t] +
-      "</option>";
+      '<option value="' + types[t] + '">' + types[t] + "</option>";
   }
 }
 
@@ -75,41 +64,28 @@ export function renderTimeline() {
 
   if (!container) return;
 
-  var order =
-    document.getElementById("timelineOrder").value;
+  var order = document.getElementById("timelineOrder").value;
 
-  var personFilter =
-    document.getElementById("timelinePersonFilter").value;
+  var personFilter = document.getElementById("timelinePersonFilter").value;
 
-  var locationFilter =
-    document.getElementById("timelineLocationFilter").value;
+  var locationFilter = document.getElementById("timelineLocationFilter").value;
 
-  var typeFilter =
-    document.getElementById("timelineTypeFilter").value;
+  var typeFilter = document.getElementById("timelineTypeFilter").value;
 
   var events = [];
 
   for (var i = 0; i < allTimeline.length; i++) {
     var evt = allTimeline[i];
 
-    if (
-      personFilter &&
-      evt.personIds.indexOf(personFilter) === -1
-    ) {
+    if (personFilter && evt.personIds.indexOf(personFilter) === -1) {
       continue;
     }
 
-    if (
-      locationFilter &&
-      evt.locationIds.indexOf(locationFilter) === -1
-    ) {
+    if (locationFilter && evt.locationIds.indexOf(locationFilter) === -1) {
       continue;
     }
 
-    if (
-      typeFilter &&
-      evt.type !== typeFilter
-    ) {
+    if (typeFilter && evt.type !== typeFilter) {
       continue;
     }
 
@@ -117,8 +93,7 @@ export function renderTimeline() {
   }
 
   events = events.slice().sort(function (a, b) {
-    var diff =
-      new Date(a.time) - new Date(b.time);
+    var diff = new Date(a.time) - new Date(b.time);
 
     return order === "desc" ? -diff : diff;
   });
@@ -128,10 +103,7 @@ export function renderTimeline() {
   for (var e = 0; e < events.length; e++) {
     var item = events[e];
 
-    html +=
-      '<div class="timeline-event certainty-' +
-      item.certainty +
-      '">';
+    html += '<div class="timeline-event certainty-' + item.certainty + '">';
 
     html +=
       '<div class="timeline-time">' +
@@ -149,12 +121,9 @@ export function renderTimeline() {
     var eventLocationNames = [];
 
     for (var el = 0; el < item.locationIds.length; el++) {
-      var evtLoc =
-        findLocationById(item.locationIds[el]);
+      var evtLoc = findLocationById(item.locationIds[el]);
 
-      eventLocationNames.push(
-        evtLoc || item.locationIds[el]
-      );
+      eventLocationNames.push(evtLoc || item.locationIds[el]);
     }
 
     if (eventLocationNames.length > 0) {
@@ -177,24 +146,17 @@ export function renderTimeline() {
   }
 
   if (events.length === 0) {
-    html =
-      "<p>No timeline events match the current filters.</p>";
+    html = "<p>No timeline events match the current filters.</p>";
   }
 
   container.innerHTML = html;
 
-  var linkButtons =
-    container.querySelectorAll(".evidence-link-btn");
+  var linkButtons = container.querySelectorAll(".evidence-link-btn");
 
   for (var b = 0; b < linkButtons.length; b++) {
-    linkButtons[b].addEventListener(
-      "click",
-      function (e) {
-        openEvidenceModal(
-          e.target.getAttribute("data-evidence-id")
-        );
-      }
-    );
+    linkButtons[b].addEventListener("click", function (e) {
+      openEvidenceModal(e.target.getAttribute("data-evidence-id"));
+    });
   }
 }
 
@@ -215,8 +177,7 @@ function openEvidenceModal(evidenceId) {
 
   if (!ev) return;
 
-  var modal =
-    document.getElementById("quickViewModal");
+  var modal = document.getElementById("quickViewModal");
 
   if (!modal) {
     modal = document.createElement("div");
@@ -247,10 +208,7 @@ function openEvidenceModal(evidenceId) {
 
   incrementModalCloseListenerCount();
 
-  console.log(
-    "modal opened, active close listeners:",
-    modalCloseListenerCount
-  );
+  console.log("modal opened, active close listeners:", modalCloseListenerCount);
 
   modal.addEventListener("click", function (e) {
     if (
@@ -260,12 +218,8 @@ function openEvidenceModal(evidenceId) {
       modal.innerHTML = "";
     }
 
-    if (
-      e.target.getAttribute &&
-      e.target.getAttribute("data-open-full")
-    ) {
-      var evidenceId =
-        e.target.getAttribute("data-open-full");
+    if (e.target.getAttribute && e.target.getAttribute("data-open-full")) {
+      var evidenceId = e.target.getAttribute("data-open-full");
 
       modal.innerHTML = "";
 

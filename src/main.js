@@ -1,16 +1,11 @@
-import {
-  navigateTo,
-  handleHashChange
-} from "./navigation.js";
+import { navigateTo, handleHashChange } from "./navigation.js";
 
-import {
-  loadAllData
-} from "./data.js";
+import { loadAllData } from "./data.js";
 
 import {
   loadBookmarksFromStorage,
   loadNotesFromStorage,
-  loadNoteAsync
+  loadNoteAsync,
 } from "./storage.js";
 
 import {
@@ -19,20 +14,14 @@ import {
   clearFilters,
   handleSortChange,
   closeEvidenceDetail,
-  saveCurrentNote
+  saveCurrentNote,
 } from "./views/evidence.js";
 
-import {
-  renderTimeline
-} from "./views/timeline.js";
+import { renderTimeline } from "./views/timeline.js";
 
-import {
-  switchPeopleTab
-} from "./views/people.js";
+import { switchPeopleTab } from "./views/people.js";
 
-import {
-  saveHypothesis
-} from "./views/workspace.js";
+import { saveHypothesis } from "./views/workspace.js";
 
 // ---------------------------------------------------------------------
 // LEGACY INLINE HTML HANDLERS
@@ -61,8 +50,7 @@ function setupEventListeners() {
 
   for (var i = 0; i < navButtons.length; i++) {
     navButtons[i].addEventListener("click", function (e) {
-      var targetView =
-        e.currentTarget.getAttribute("data-view");
+      var targetView = e.currentTarget.getAttribute("data-view");
 
       console.log("nav clicked:", targetView);
     });
@@ -90,10 +78,7 @@ function setupEventListeners() {
 
   document
     .getElementById("filterStatus")
-    .setAttribute(
-      "onchange",
-      "renderEvidenceList()"
-    );
+    .setAttribute("onchange", "renderEvidenceList()");
 
   document
     .getElementById("filterRelevance")
@@ -120,13 +105,9 @@ function setupEventListeners() {
     .addEventListener("change", renderTimeline);
 
   // Kept as arrow callback from Exercise 1 Demo 10
-  document
-    .getElementById("hypConfidence")
-    .addEventListener("input", (e) => {
-      document.getElementById(
-        "hypConfidenceValue"
-      ).textContent = e.target.value;
-    });
+  document.getElementById("hypConfidence").addEventListener("input", (e) => {
+    document.getElementById("hypConfidenceValue").textContent = e.target.value;
+  });
 }
 
 // ---------------------------------------------------------------------
@@ -144,19 +125,10 @@ function initApp() {
 
     var firstNote = loadNoteAsync("E01");
 
-    console.log(
-      "First note preview:",
-      firstNote
-    );
+    console.log("First note preview:", firstNote);
   });
 }
 
-window.addEventListener(
-  "DOMContentLoaded",
-  initApp
-);
+window.addEventListener("DOMContentLoaded", initApp);
 
-window.addEventListener(
-  "hashchange",
-  handleHashChange
-);
+window.addEventListener("hashchange", handleHashChange);
