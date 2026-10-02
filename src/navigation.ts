@@ -14,13 +14,13 @@ import { renderWorkspace } from "./views/workspace.js";
 // NAVIGATION / HASH ROUTING
 // ---------------------------------------------------------------------
 
-export function navigateTo(viewName) {
+export function navigateTo(viewName: string) {
   window.location.hash = viewName;
   // handleHashChange() will pick this up via the hashchange listener
 }
 
 export function handleHashChange() {
-  var hash = window.location.hash.replace("#", "");
+  let hash = window.location.hash.replace("#", "");
 
   var validViews = ["dashboard", "evidence", "people", "timeline", "workspace"];
 
@@ -32,19 +32,25 @@ export function handleHashChange() {
 
   var sections = document.querySelectorAll(".view");
 
-  for (var i = 0; i < sections.length; i++) {
-    sections[i].classList.remove("active");
+  for (const section of sections) {
+    section.classList.remove("active");
   }
 
-  document.getElementById("view-" + hash).classList.add("active");
+  const activeSection = document.getElementById("view-" + hash);
+
+  if (!activeSection) {
+    throw new Error("Could not find view: " + hash);
+  }
+
+  activeSection.classList.add("active");
 
   var navButtons = document.querySelectorAll(".nav-btn");
 
-  for (var n = 0; n < navButtons.length; n++) {
-    navButtons[n].classList.remove("active");
+  for (const navButton of navButtons) {
+    navButton.classList.remove("active");
 
-    if (navButtons[n].getAttribute("data-view") === hash) {
-      navButtons[n].classList.add("active");
+    if (navButton.getAttribute("data-view") === hash) {
+      navButton.classList.add("active");
     }
   }
 

@@ -1,5 +1,9 @@
 import { bookmarks, notesStore, setBookmarks, setNotesStore } from "./state.js";
 
+function getNotesStore(): Record<string, string> {
+  return notesStore as Record<string, string>;
+}
+
 // ---------------------------------------------------------------------
 // LOCAL STORAGE KEYS
 // ---------------------------------------------------------------------
@@ -28,13 +32,13 @@ export function loadBookmarksFromStorage() {
   }
 }
 
-export function saveNoteForEvidence(evidenceId, text) {
-  notesStore[evidenceId] = text;
+export function saveNoteForEvidence(evidenceId: string, text: string) {
+  getNotesStore()[evidenceId] = text;
   localStorage.setItem(STORAGE_KEY_NOTES, JSON.stringify(notesStore));
 }
 
-export function loadNoteForEvidence(evidenceId) {
-  return notesStore[evidenceId] || "";
+export function loadNoteForEvidence(evidenceId: string) {
+  return getNotesStore()[evidenceId] || "";
 }
 
 export function loadNotesFromStorage() {
@@ -48,8 +52,8 @@ export function loadNotesFromStorage() {
   setNotesStore(JSON.parse(raw));
 }
 
-export function loadNoteAsync(evidenceId) {
+export function loadNoteAsync(evidenceId: string) {
   return new Promise(function (resolve) {
-    resolve(notesStore[evidenceId] || "");
+    resolve(getNotesStore()[evidenceId] || "");
   });
 }
