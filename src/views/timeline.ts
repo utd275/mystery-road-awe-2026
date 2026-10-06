@@ -10,6 +10,11 @@ import { findEvidenceById, findLocationById, formatDate } from "../utils.js";
 
 import { openEvidenceDetail } from "./evidence.js";
 
+import type {
+  TimelineCertainty,
+  TimelineEvent,
+} from "../types.js";
+
 // ---------------------------------------------------------------------
 // TIMELINE
 // ---------------------------------------------------------------------
@@ -23,39 +28,39 @@ export function populateTimelineDropdowns() {
 
   personSelect.innerHTML = '<option value="">All people</option>';
 
-  for (var p = 0; p < allPeople.length; p++) {
+  for (const person of allPeople) {
     personSelect.innerHTML +=
       '<option value="' +
-      allPeople[p].id +
+      person.id +
       '">' +
-      allPeople[p].name +
+      person.name +
       "</option>";
   }
 
   locationSelect.innerHTML = '<option value="">All locations</option>';
 
-  for (var l = 0; l < allLocations.length; l++) {
-    locationSelect.innerHTML +=
-      '<option value="' +
-      allLocations[l].id +
-      '">' +
-      allLocations[l].id +
-      "</option>";
+  for (const location of allLocations) {
+  locationSelect.innerHTML +=
+    '<option value="' +
+    location.id +
+    '">' +
+    location.id +
+    "</option>";
   }
 
-  var types = [];
+  const types: string[] = [];
 
-  for (var i = 0; i < allTimeline.length; i++) {
-    if (types.indexOf(allTimeline[i].type) === -1) {
-      types.push(allTimeline[i].type);
+  for (const timelineEvent of allTimeline) {
+    if (types.indexOf(timelineEvent.type) === -1) {
+      types.push(timelineEvent.type);
     }
   }
 
   typeSelect.innerHTML = '<option value="">All event types</option>';
 
-  for (var t = 0; t < types.length; t++) {
+  for (const type of types) {
     typeSelect.innerHTML +=
-      '<option value="' + types[t] + '">' + types[t] + "</option>";
+      '<option value="' + type + '">' + type + "</option>";
   }
 }
 
@@ -64,24 +69,39 @@ export function renderTimeline() {
 
   if (!container) return;
 
-  var order = document.getElementById("timelineOrder").value;
+  const orderSelect = document.getElementById("timelineOrder");
+  const personSelect = document.getElementById("timelinePersonFilter");
+  const locationSelect = document.getElementById("timelineLocationFilter");
+  const typeSelect = document.getElementById("timelineTypeFilter");
 
-  var personFilter = document.getElementById("timelinePersonFilter").value;
+  if (
+    !(orderSelect instanceof HTMLSelectElement) ||
+    !(personSelect instanceof HTMLSelectElement) ||
+    !(locationSelect instanceof HTMLSelectElement) ||
+    !(typeSelect instanceof HTMLSelectElement)
+  ) {
+    throw new Error("Could not find timeline filter elements.");
+  }
 
-  var locationFilter = document.getElementById("timelineLocationFilter").value;
+  const order = orderSelect.value;
+  const personFilter = personSelect.value;
+  const locationFilter = locationSelect.value;
+  const typeFilter = typeSelect.value;
 
-  var typeFilter = document.getElementById("timelineTypeFilter").value;
+  let events: TimelineEvent[] = [];
 
-  var events = [];
-
-  for (var i = 0; i < allTimeline.length; i++) {
-    var evt = allTimeline[i];
-
-    if (personFilter && evt.personIds.indexOf(personFilter) === -1) {
+  for (const evt of allTimeline) {
+    if (
+      personFilter &&
+      !evt.personIds.some((personId) => personId === personFilter)
+    ) {
       continue;
     }
 
-    if (locationFilter && evt.locationIds.indexOf(locationFilter) === -1) {
+    if (
+      locationFilter &&
+      !evt.locationIds.some((locationId) => locationId === locationFilter)
+    ) {
       continue;
     }
 
@@ -93,15 +113,15 @@ export function renderTimeline() {
   }
 
   events = events.slice().sort(function (a, b) {
-    var diff = new Date(a.time) - new Date(b.time);
+    const diff =
+      new Date(a.time).getTime() - new Date(b.time).getTime();
 
     return order === "desc" ? -diff : diff;
   });
 
   var html = "";
 
-  for (var e = 0; e < events.length; e++) {
-    var item = events[e];
+  for (const item of events) {
 
     html += '<div class="timeline-event certainty-' + item.certainty + '">';
 
@@ -120,10 +140,10 @@ export function renderTimeline() {
 
     var eventLocationNames = [];
 
-    for (var el = 0; el < item.locationIds.length; el++) {
-      var evtLoc = findLocationById(item.locationIds[el]);
+    for (const locationId of item.locationIds) {
+      var evtLoc = findLocationById(locationId);
 
-      eventLocationNames.push(evtLoc || item.locationIds[el]);
+      eventLocationNames.push(evtLoc || locationId);
     }
 
     if (eventLocationNames.length > 0) {
@@ -133,12 +153,12 @@ export function renderTimeline() {
         "</p>";
     }
 
-    for (var ev2 = 0; ev2 < item.evidenceIds.length; ev2++) {
+    for (const evidenceId of item.evidenceIds) {
       html +=
         '<button type="button" class="evidence-link-btn" data-evidence-id="' +
-        item.evidenceIds[ev2] +
+        evidenceId +
         '">View ' +
-        item.evidenceIds[ev2] +
+        evidenceId +
         "</button>";
     }
 
@@ -153,14 +173,20 @@ export function renderTimeline() {
 
   var linkButtons = container.querySelectorAll(".evidence-link-btn");
 
-  for (var b = 0; b < linkButtons.length; b++) {
-    linkButtons[b].addEventListener("click", function (e) {
-      openEvidenceModal(e.target.getAttribute("data-evidence-id"));
+  for (const button of linkButtons) {
+    button.addEventListener("click", function () {
+      const evidenceId = button.getAttribute("data-evidence-id");
+
+      if (!evidenceId) {
+        return;
+      }
+
+      openEvidenceModal(evidenceId);
     });
   }
 }
 
-function certaintyBadgeClass(certainty) {
+function certaintyBadgeClass(certainty: TimelineCertainty): string {
   if (certainty === "confirmed") return "reviewed";
   if (certainty === "contradictory") return "critical";
   if (certainty === "reported") return "flagged";
@@ -172,7 +198,7 @@ function certaintyBadgeClass(certainty) {
 // QUICK-VIEW MODAL
 // ---------------------------------------------------------------------
 
-function openEvidenceModal(evidenceId) {
+function openEvidenceModal(evidenceId: string) {
   var ev = findEvidenceById(evidenceId);
 
   if (!ev) return;
@@ -210,18 +236,27 @@ function openEvidenceModal(evidenceId) {
 
   console.log("modal opened, active close listeners:", modalCloseListenerCount);
 
-  modal.addEventListener("click", function (e) {
-    if (
-      e.target.classList.contains("modal-close-btn") ||
-      e.target.classList.contains("modal-backdrop")
-    ) {
-      modal.innerHTML = "";
+  const modalElement = modal;
+
+
+  modalElement.addEventListener("click", function (e) {
+    const target = e.target;
+
+    if (!(target instanceof HTMLElement)) {
+      return;
     }
 
-    if (e.target.getAttribute && e.target.getAttribute("data-open-full")) {
-      var evidenceId = e.target.getAttribute("data-open-full");
+    if (
+      target.classList.contains("modal-close-btn") ||
+      target.classList.contains("modal-backdrop")
+    ) {
+      modalElement.innerHTML = "";
+    }
 
-      modal.innerHTML = "";
+    const evidenceId = target.getAttribute("data-open-full");
+
+    if (evidenceId) {
+      modalElement.innerHTML = "";
 
       // Same effect as the old navigateTo("evidence"),
       // without importing navigation.js and creating a cycle.

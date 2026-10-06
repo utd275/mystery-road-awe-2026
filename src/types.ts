@@ -43,6 +43,7 @@ export interface Evidence {
   tags: string[];
   status: string;
   relevance: string;
+  bookmarked?: boolean;
 }
 
 export interface Person {

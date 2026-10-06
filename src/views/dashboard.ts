@@ -18,9 +18,11 @@ export function renderDashboard() {
   if (!container) return;
 
   var reviewedCount = 0;
-  for (var i = 0; i < allEvidence.length; i++) {
-    if ((allEvidence[i].status || "").toLowerCase() === "reviewed")
+
+  for (const evidence of allEvidence) {
+    if ((evidence.status || "").toLowerCase() === "reviewed") {
       reviewedCount++;
+    }
   }
 
   var progressPct =
@@ -31,12 +33,12 @@ export function renderDashboard() {
   var html = "";
 
   html += '<div class="case-summary-card">';
-  html += "<h3>" + (caseData.title || "Case") + "</h3>";
+  html += "<h3>" + (caseData?.title || "Case") + "</h3>";
   html +=
     '<p><span class="badge badge-flagged">' +
-    (caseData.status || "unknown").toUpperCase() +
+    (caseData?.status || "unknown").toUpperCase() +
     "</span></p>";
-  html += "<p>" + (caseData.summary || "") + "</p>";
+  html += "<p>" + (caseData?.summary || "") + "</p>";
   html += "</div>";
 
   html += '<div class="stat-grid">';
@@ -66,9 +68,7 @@ export function renderDashboard() {
     html += "<p>No evidence loaded yet.</p>";
   }
 
-  for (var e = 0; e < recentEvidence.length; e++) {
-    var ev = recentEvidence[e];
-
+  for (const ev of recentEvidence) {
     html +=
       '<div class="mini-list-item"><strong>' +
       ev.id +
@@ -91,9 +91,7 @@ export function renderDashboard() {
     html += "<p>No timeline events loaded yet.</p>";
   }
 
-  for (var t = 0; t < recentTimeline.length; t++) {
-    var evt = recentTimeline[t];
-
+  for (const evt of recentTimeline) {
     html +=
       '<div class="mini-list-item"><strong>' +
       formatDate(evt.time) +
@@ -109,7 +107,7 @@ export function renderDashboard() {
   container.innerHTML = html;
 }
 
-function statCardHTML(value, label) {
+function statCardHTML(value: number, label: string): string {
   return (
     '<div class="stat-card"><div class="stat-value">' +
     value +

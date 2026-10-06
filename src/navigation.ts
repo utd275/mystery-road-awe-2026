@@ -1,4 +1,5 @@
 import { viewRendered, setCurrentPage } from "./state.js";
+import type { AppView } from "./state.js";
 
 import { renderDashboard } from "./views/dashboard.js";
 
@@ -19,14 +20,25 @@ export function navigateTo(viewName: string) {
   // handleHashChange() will pick this up via the hashchange listener
 }
 
+const validViews: AppView[] = [
+  "dashboard",
+  "evidence",
+  "people",
+  "timeline",
+  "workspace",
+];
+
+function isAppView(value: string): value is AppView {
+  return validViews.some((view) => view === value);
+}
+
+
 export function handleHashChange() {
-  let hash = window.location.hash.replace("#", "");
+  const rawHash = window.location.hash.replace("#", "");
 
-  var validViews = ["dashboard", "evidence", "people", "timeline", "workspace"];
-
-  if (validViews.indexOf(hash) === -1) {
-    hash = "dashboard";
-  }
+  const hash: AppView = isAppView(rawHash)
+    ? rawHash
+    : "dashboard";
 
   setCurrentPage(hash);
 
