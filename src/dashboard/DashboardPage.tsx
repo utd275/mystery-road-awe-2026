@@ -11,6 +11,8 @@ import {
   getStatusBadgeClass,
 } from "../utils";
 
+import Badge from "../shared/components/Badge";
+
 interface DashboardPageProps {
   caseData: CaseData;
   evidence: Evidence[];
@@ -62,9 +64,9 @@ export default function DashboardPage({
         <h3>{caseData.title}</h3>
 
         <p>
-          <span className="badge badge-flagged">
+          <Badge variant="flagged">
             {caseData.status.toUpperCase()}
-          </span>
+          </Badge>
         </p>
 
         <p>{caseData.summary}</p>
