@@ -11,29 +11,17 @@ import DashboardPage from "../dashboard/DashboardPage";
 import PeopleLocationsPage from "../people-locations/PeopleLocationsPage";
 import TimelinePage from "../timeline/TimelinePage";
 import PersonDetailPage from "../people-locations/PersonDetailPage";
+import EvidencePage from "../evidence/EvidencePage";
+import WorkspacePage from "../workspace/WorkspacePage";
 
 import {
   loadAppData,
   type AppData,
 } from "../react-data";
 
-function EvidencePage() {
-  return (
-    <section className="view active">
-      <h2>Evidence Catalogue</h2>
-      <p>This view will be migrated later.</p>
-    </section>
-  );
-}
 
-function WorkspacePage() {
-  return (
-    <section className="view active">
-      <h2>Investigator Workspace</h2>
-      <p>This view will be migrated later.</p>
-    </section>
-  );
-}
+
+
 
 function loadStoredBookmarks(): string[] {
   try {
@@ -65,7 +53,10 @@ function App() {
   const [loadError, setLoadError] =
     useState<string | null>(null);
 
-  const [bookmarks] = useState<string[]>(
+  const [
+    bookmarks,
+    setBookmarks,
+  ] = useState<string[]>(
     loadStoredBookmarks
   );
 
@@ -82,6 +73,24 @@ function App() {
         );
       });
   }, []);
+
+  function handleToggleBookmark(
+    evidenceId: string
+  ) {
+    const nextBookmarks =
+      bookmarks.includes(evidenceId)
+        ? bookmarks.filter(
+            (id) => id !== evidenceId
+          )
+        : [...bookmarks, evidenceId];
+
+    setBookmarks(nextBookmarks);
+
+    localStorage.setItem(
+      "remotion_bookmarks",
+      JSON.stringify(nextBookmarks)
+    );
+  }
 
   function renderDashboard() {
     if (loadError) {
@@ -198,7 +207,65 @@ function App() {
     );
   }
 
+  function renderWorkspace() {
+    if (loadError) {
+      return (
+        <section className="view active">
+          <h2>Investigator Workspace</h2>
+          <p>{loadError}</p>
+        </section>
+      );
+    }
 
+    if (!appData) {
+      return (
+        <section className="view active">
+          <h2>Investigator Workspace</h2>
+          <p>Loading workspace...</p>
+        </section>
+      );
+    }
+
+    return (
+      <WorkspacePage
+        evidence={appData.evidence}
+        people={appData.people}
+        bookmarks={bookmarks}
+      />
+    );
+  }
+
+  function renderEvidence() {
+    if (loadError) {
+      return (
+        <section className="view active">
+          <h2>Evidence Catalogue</h2>
+          <p>{loadError}</p>
+        </section>
+      );
+    }
+
+    if (!appData) {
+      return (
+        <section className="view active">
+          <h2>Evidence Catalogue</h2>
+          <p>Loading evidence...</p>
+        </section>
+      );
+    }
+
+    return (
+      <EvidencePage
+        evidence={appData.evidence}
+        people={appData.people}
+        locations={appData.locations}
+        bookmarks={bookmarks}
+        onToggleBookmark={
+          handleToggleBookmark
+        }
+      />
+    );
+  }
 
   return (
     <>
@@ -302,7 +369,7 @@ function App() {
 
           <Route
             path="/evidence"
-            element={<EvidencePage />}
+            element={renderEvidence()}
           />
 
           <Route
@@ -337,7 +404,7 @@ function App() {
 
           <Route
             path="/workspace"
-            element={<WorkspacePage />}
+            element={renderWorkspace()}
           />
 
           <Route
