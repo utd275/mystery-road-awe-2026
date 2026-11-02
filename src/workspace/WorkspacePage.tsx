@@ -15,6 +15,8 @@ import {
   STORAGE_KEY_HYPOTHESIS,
 } from "../storage";
 
+import NoteForm from "./NoteForm";
+
 interface WorkspacePageProps {
   evidence: Evidence[];
   people: Person[];
@@ -142,9 +144,12 @@ export default function WorkspacePage({
   bookmarks,
 }: WorkspacePageProps) {
 
-  const [notes] = useState<
+  const [
+    notes,
+    setNotes,
+  ] = useState<
     Record<string, string>
-  >(loadStoredNotes);
+  >(loadStoredNotes)
 
   const [
     hypothesis,
@@ -171,6 +176,23 @@ export default function WorkspacePage({
       (entry) =>
         entry.text.trim().length > 0
     );
+
+  function handleSaveNote(
+    evidenceId: string,
+    text: string
+  ) {
+    const nextNotes = {
+      ...notes,
+      [evidenceId]: text,
+    };
+
+    setNotes(nextNotes);
+
+    localStorage.setItem(
+      "remotion_notes",
+      JSON.stringify(nextNotes)
+    );
+  }
 
   function handleEvidenceSelection(
     event: ChangeEvent<HTMLSelectElement>
@@ -245,6 +267,11 @@ export default function WorkspacePage({
 
         <section>
           <h3>Investigator Notes</h3>
+
+          <NoteForm
+            evidence={evidence}
+            onSaveNote={handleSaveNote}
+          />
 
           <div className="notes-list">
             {noteEntries.length === 0 ? (
