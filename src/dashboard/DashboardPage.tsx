@@ -13,13 +13,16 @@ import {
 
 import Badge from "../shared/components/Badge";
 
+import {
+  useBookmarks,
+} from "../bookmarks/BookmarkContext";
+
 interface DashboardPageProps {
   caseData: CaseData;
   evidence: Evidence[];
   people: Person[];
   locations: Location[];
   timeline: TimelineEvent[];
-  bookmarks: string[];
 }
 
 interface StatCardProps {
@@ -42,8 +45,11 @@ export default function DashboardPage({
   people,
   locations,
   timeline,
-  bookmarks,
 }: DashboardPageProps) {
+  const {
+    bookmarks,
+  } = useBookmarks();
+  
   const reviewedCount = evidence.filter(
     (item) => item.status.toLowerCase() === "reviewed"
   ).length;

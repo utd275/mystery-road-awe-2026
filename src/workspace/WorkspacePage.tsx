@@ -17,10 +17,13 @@ import {
 
 import NoteForm from "./NoteForm";
 
+import {
+  useBookmarks,
+} from "../bookmarks/BookmarkContext";
+
 interface WorkspacePageProps {
   evidence: Evidence[];
   people: Person[];
-  bookmarks: string[];
 }
 
 
@@ -141,8 +144,11 @@ function loadStoredHypothesis():
 export default function WorkspacePage({
   evidence,
   people,
-  bookmarks,
 }: WorkspacePageProps) {
+
+  const {
+    bookmarks,
+  } = useBookmarks();
 
   const [
     notes,

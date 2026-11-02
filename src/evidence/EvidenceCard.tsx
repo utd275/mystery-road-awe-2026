@@ -1,5 +1,9 @@
 import type { MouseEvent } from "react";
 
+import {
+  useBookmarks,
+} from "../bookmarks/BookmarkContext";
+
 import type { Evidence } from "../types";
 
 import {
@@ -8,19 +12,26 @@ import {
   getStatusBadgeClass,
 } from "../utils";
 
+
 interface EvidenceCardProps {
   evidence: Evidence;
-  isBookmarked: boolean;
-  onToggleBookmark: (evidenceId: string) => void;
-  onOpen: (evidence: Evidence) => void;
+  onOpen: (
+    evidence: Evidence
+  ) => void;
 }
 
 export default function EvidenceCard({
   evidence,
-  isBookmarked,
-  onToggleBookmark,
   onOpen,
 }: EvidenceCardProps) {
+  const {
+    bookmarks,
+    onToggleBookmark,
+  } = useBookmarks();
+
+  const isBookmarked =
+    bookmarks.includes(evidence.id);
+    
   function handleBookmarkClick(
     event: MouseEvent<HTMLButtonElement>
   ) {

@@ -19,7 +19,9 @@ import {
   type AppData,
 } from "../react-data";
 
-
+import {
+  BookmarkContext,
+} from "../bookmarks/BookmarkContext";
 
 
 
@@ -118,7 +120,6 @@ function App() {
         people={appData.people}
         locations={appData.locations}
         timeline={appData.timeline}
-        bookmarks={bookmarks}
       />
     );
   }
@@ -230,7 +231,6 @@ function App() {
       <WorkspacePage
         evidence={appData.evidence}
         people={appData.people}
-        bookmarks={bookmarks}
       />
     );
   }
@@ -259,16 +259,18 @@ function App() {
         evidence={appData.evidence}
         people={appData.people}
         locations={appData.locations}
-        bookmarks={bookmarks}
-        onToggleBookmark={
-          handleToggleBookmark
-        }
       />
     );
   }
 
   return (
-    <>
+    <BookmarkContext.Provider
+      value={{
+        bookmarks,
+        onToggleBookmark:
+          handleToggleBookmark,
+      }}
+    >
       <header className="app-header">
         <div className="header-inner">
           <div className="brand">
@@ -426,7 +428,7 @@ function App() {
           IT-Security of HCW (fictional case study)
         </p>
       </footer>
-    </>
+    </BookmarkContext.Provider>
   );
 }
 

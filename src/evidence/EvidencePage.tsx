@@ -16,10 +16,6 @@ interface EvidencePageProps {
   evidence: Evidence[];
   people: Person[];
   locations: Location[];
-  bookmarks: string[];
-  onToggleBookmark: (
-    evidenceId: string
-  ) => void;
 }
 
 interface EvidenceFilterState {
@@ -91,8 +87,6 @@ export default function EvidencePage({
   evidence,
   people,
   locations,
-  bookmarks,
-  onToggleBookmark,
 }: EvidencePageProps) {
   const [
     filterState,
@@ -441,12 +435,6 @@ export default function EvidencePage({
               <EvidenceCard
                 key={item.id}
                 evidence={item}
-                isBookmarked={bookmarks.includes(
-                  item.id
-                )}
-                onToggleBookmark={
-                  onToggleBookmark
-                }
                 onOpen={
                   handleOpenEvidence
                 }
