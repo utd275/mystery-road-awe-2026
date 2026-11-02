@@ -108,9 +108,19 @@ export default function EvidencePage({
 
   
   const [
-    selectedEvidence,
-    setSelectedEvidence,
-  ] = useState<Evidence | null>(null);
+    selectedEvidenceId,
+    setSelectedEvidenceId,
+  ] = useState<string | null>(null);
+
+  function dispatchFilterAction(
+    action: EvidenceFilterAction
+  ) {
+    if (action.type !== "SET_SORT") {
+      setSelectedEvidenceId(null);
+    }
+
+    dispatch(action);
+  }
 
   const typeOptions = Array.from(
     new Set(
@@ -195,10 +205,18 @@ export default function EvidencePage({
       }
     });
 
+    const selectedEvidence =
+      selectedEvidenceId
+        ? evidence.find(
+            (item) =>
+              item.id === selectedEvidenceId
+          ) ?? null
+        : null;
+
   function handleSearchChange(
     event: ChangeEvent<HTMLInputElement>
   ) {
-    dispatch({
+    dispatchFilterAction({
       type: "SET_FILTER",
       field: "searchTerm",
       value: event.target.value,
@@ -236,7 +254,7 @@ export default function EvidencePage({
   function handleOpenEvidence(
     item: Evidence
   ) {
-    setSelectedEvidence(item);
+    setSelectedEvidenceId(item.id);
   }
 
   return (
@@ -255,7 +273,7 @@ export default function EvidencePage({
           <select
             value={typeFilter}
             onChange={(event) =>
-              dispatch({
+              dispatchFilterAction({
                 type: "SET_FILTER",
                 field: "typeFilter",
                 value: event.target.value,
@@ -279,7 +297,7 @@ export default function EvidencePage({
           <select
             value={personFilter}
             onChange={(event) =>
-              dispatch({
+              dispatchFilterAction({
                 type: "SET_FILTER",
                 field: "personFilter",
                 value: event.target.value,
@@ -303,7 +321,7 @@ export default function EvidencePage({
           <select
             value={locationFilter}
             onChange={(event) =>
-              dispatch({
+              dispatchFilterAction({
                 type: "SET_FILTER",
                 field: "locationFilter",
                 value: event.target.value,
@@ -331,7 +349,7 @@ export default function EvidencePage({
           <select
             value={statusFilter}
             onChange={(event) =>
-              dispatch({
+              dispatchFilterAction({
                 type: "SET_FILTER",
                 field: "statusFilter",
                 value: event.target.value,
@@ -358,7 +376,7 @@ export default function EvidencePage({
           <select
             value={relevanceFilter}
             onChange={(event) =>
-              dispatch({
+              dispatchFilterAction({
                 type: "SET_FILTER",
                 field: "relevanceFilter",
                 value: event.target.value,
@@ -385,7 +403,7 @@ export default function EvidencePage({
           <select
             value={sortOrder}
             onChange={(event) =>
-              dispatch({
+              dispatchFilterAction({
                 type: "SET_SORT",
                 value: event.target.value,
               })
@@ -412,7 +430,7 @@ export default function EvidencePage({
             type="button"
             className="btn btn-secondary btn-small"
             onClick={() =>
-              dispatch({
+              dispatchFilterAction({
                 type: "CLEAR_FILTERS",
               })
             }
@@ -463,7 +481,7 @@ export default function EvidencePage({
               type="button"
               className="btn btn-secondary btn-small"
               onClick={() =>
-                setSelectedEvidence(null)
+                setSelectedEvidenceId(null)
               }
             >
               Close
