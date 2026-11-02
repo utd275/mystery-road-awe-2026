@@ -1,5 +1,6 @@
 import {
   type ChangeEvent,
+  useReducer,
   useState,
 } from "react";
 
@@ -21,7 +22,70 @@ interface EvidencePageProps {
   ) => void;
 }
 
+interface EvidenceFilterState {
+  searchTerm: string;
+  typeFilter: string;
+  personFilter: string;
+  locationFilter: string;
+  statusFilter: string;
+  relevanceFilter: string;
+  sortOrder: string;
+}
 
+type EvidenceFilterField =
+  | "searchTerm"
+  | "typeFilter"
+  | "personFilter"
+  | "locationFilter"
+  | "statusFilter"
+  | "relevanceFilter";
+
+type EvidenceFilterAction =
+  | {
+      type: "SET_FILTER";
+      field: EvidenceFilterField;
+      value: string;
+    }
+  | {
+      type: "SET_SORT";
+      value: string;
+    }
+  | {
+      type: "CLEAR_FILTERS";
+    };
+
+const initialEvidenceFilterState:
+  EvidenceFilterState = {
+    searchTerm: "",
+    typeFilter: "",
+    personFilter: "",
+    locationFilter: "",
+    statusFilter: "",
+    relevanceFilter: "",
+    sortOrder: "date-desc",
+  };
+
+function evidenceFilterReducer(
+  state: EvidenceFilterState,
+  action: EvidenceFilterAction
+): EvidenceFilterState {
+  switch (action.type) {
+    case "SET_FILTER":
+      return {
+        ...state,
+        [action.field]: action.value,
+      };
+
+    case "SET_SORT":
+      return {
+        ...state,
+        sortOrder: action.value,
+      };
+
+    case "CLEAR_FILTERS":
+      return initialEvidenceFilterState;
+  }
+}
 
 export default function EvidencePage({
   evidence,
@@ -30,25 +94,23 @@ export default function EvidencePage({
   bookmarks,
   onToggleBookmark,
 }: EvidencePageProps) {
-  const [searchTerm, setSearchTerm] =
-    useState("");
-  const [typeFilter, setTypeFilter] =
-    useState("");
+  const [
+    filterState,
+    dispatch,
+  ] = useReducer(
+    evidenceFilterReducer,
+    initialEvidenceFilterState
+  );
 
-  const [personFilter, setPersonFilter] =
-    useState("");
-
-  const [locationFilter, setLocationFilter] =
-    useState("");
-
-  const [statusFilter, setStatusFilter] =
-    useState("");
-
-  const [relevanceFilter, setRelevanceFilter] =
-    useState("");
-
-  const [sortOrder, setSortOrder] =
-    useState("date-desc");
+  const {
+    searchTerm,
+    typeFilter,
+    personFilter,
+    locationFilter,
+    statusFilter,
+    relevanceFilter,
+    sortOrder,
+  } = filterState;
 
   
   const [
@@ -142,7 +204,11 @@ export default function EvidencePage({
   function handleSearchChange(
     event: ChangeEvent<HTMLInputElement>
   ) {
-    setSearchTerm(event.target.value);
+    dispatch({
+      type: "SET_FILTER",
+      field: "searchTerm",
+      value: event.target.value,
+    });
   }
 
   
@@ -195,7 +261,11 @@ export default function EvidencePage({
           <select
             value={typeFilter}
             onChange={(event) =>
-              setTypeFilter(event.target.value)
+              dispatch({
+                type: "SET_FILTER",
+                field: "typeFilter",
+                value: event.target.value,
+              })
             }
           >
             <option value="">
@@ -215,7 +285,11 @@ export default function EvidencePage({
           <select
             value={personFilter}
             onChange={(event) =>
-              setPersonFilter(event.target.value)
+              dispatch({
+                type: "SET_FILTER",
+                field: "personFilter",
+                value: event.target.value,
+              })
             }
           >
             <option value="">
@@ -235,7 +309,11 @@ export default function EvidencePage({
           <select
             value={locationFilter}
             onChange={(event) =>
-              setLocationFilter(event.target.value)
+              dispatch({
+                type: "SET_FILTER",
+                field: "locationFilter",
+                value: event.target.value,
+              })
             }
           >
             <option value="">
@@ -259,7 +337,11 @@ export default function EvidencePage({
           <select
             value={statusFilter}
             onChange={(event) =>
-              setStatusFilter(event.target.value)
+              dispatch({
+                type: "SET_FILTER",
+                field: "statusFilter",
+                value: event.target.value,
+              })
             }
           >
             <option value="">
@@ -282,7 +364,11 @@ export default function EvidencePage({
           <select
             value={relevanceFilter}
             onChange={(event) =>
-              setRelevanceFilter(event.target.value)
+              dispatch({
+                type: "SET_FILTER",
+                field: "relevanceFilter",
+                value: event.target.value,
+              })
             }
           >
             <option value="">
@@ -305,7 +391,10 @@ export default function EvidencePage({
           <select
             value={sortOrder}
             onChange={(event) =>
-               setSortOrder(event.target.value)
+              dispatch({
+                type: "SET_SORT",
+                value: event.target.value,
+              })
             }
           >
             <option value="date-desc">
@@ -324,6 +413,19 @@ export default function EvidencePage({
               Title Z-A
             </option>
           </select>
+
+          <button
+            type="button"
+            className="btn btn-secondary btn-small"
+            onClick={() =>
+              dispatch({
+                type: "CLEAR_FILTERS",
+              })
+            }
+          >
+            Clear filters
+          </button>
+          
         </div>
       </div>
 
