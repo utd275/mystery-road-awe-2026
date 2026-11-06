@@ -101,6 +101,43 @@ function App() {
   }, [pathname]);
 
 
+  useEffect(() => {
+    function handleResize() {
+      console.log(
+        "[Demo 3] resize:",
+        pathname,
+        window.innerWidth
+      );
+    }
+
+    console.log(
+      "[Demo 3] setup:",
+      pathname
+    );
+
+    window.addEventListener(
+      "resize",
+      handleResize
+    );
+
+    // Cleanup function für Exercise 6 Demo 3 entfernen
+    
+    return () => {
+      console.log(
+        "[Demo 3] cleanup:",
+        pathname
+      );
+
+      window.removeEventListener(
+        "resize",
+        handleResize
+      );
+    };
+    
+
+  }, [pathname]);
+
+
   // Existing data-loading effect
   useEffect(() => {
     loadAppData()
