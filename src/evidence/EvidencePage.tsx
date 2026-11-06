@@ -83,11 +83,24 @@ function evidenceFilterReducer(
   }
 }
 
+/* (Exercise 6 - Demo 1)
+let demoRenderCount = 0;
+*/
+
 export default function EvidencePage({
   evidence,
   people,
   locations,
 }: EvidencePageProps) {
+   
+  /* (Exercise 6 - Demo 1)
+  demoRenderCount++;
+  
+  console.log(
+    `[Demo 1] EvidencePage render #${demoRenderCount}`
+  );
+  */
+
   const [
     filterState,
     dispatch,

@@ -5,6 +5,7 @@ import {
   NavLink,
   Route,
   Routes,
+  useLocation,
 } from "react-router";
 
 import DashboardPage from "../dashboard/DashboardPage";
@@ -49,6 +50,8 @@ function loadStoredBookmarks(): string[] {
 }
 
 function App() {
+  const { pathname } = useLocation();
+
   const [appData, setAppData] =
     useState<AppData | null>(null);
 
@@ -62,6 +65,43 @@ function App() {
     loadStoredBookmarks
   );
 
+  // TEMPORARY Exercise 6 DEMO 2 EFFECTS
+  /*
+  useEffect(() => {
+    console.log("[Demo 2] no dependency array");
+  });
+
+  useEffect(() => {
+    console.log("[Demo 2] empty dependency array");
+  }, []);
+
+  useEffect(() => {
+    console.log(
+      "[Demo 2] pathname changed:",
+      pathname
+    );
+  }, [pathname]);
+  */
+
+  useEffect(() => {
+    const titles: Record<string, string> = {
+      "/dashboard": "Dashboard",
+      "/evidence": "Evidence",
+      "/team/people": "People",
+      "/team/locations": "Locations",
+      "/timeline": "Timeline",
+      "/workspace": "Workspace",
+    };
+
+    const viewTitle =
+      titles[pathname] ?? "Case";
+
+    document.title =
+      `${viewTitle} | Project ReMotion`;
+  }, [pathname]);
+
+
+  // Existing data-loading effect
   useEffect(() => {
     loadAppData()
       .then((data) => {
