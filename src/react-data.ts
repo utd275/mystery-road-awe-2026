@@ -27,11 +27,11 @@ async function fetchJson<T>(url: string): Promise<T> {
 export async function loadAppData(): Promise<AppData> {
   const [caseData, evidence, people, locations, timeline] =
     await Promise.all([
-      fetchJson<CaseData>("/data/case.json"),
-      fetchJson<Evidence[]>("/data/evidence.json"),
-      fetchJson<Person[]>("/data/people.json"),
-      fetchJson<Location[]>("/data/locations.json"),
-      fetchJson<TimelineEvent[]>("/data/timeline.json"),
+      fetchJson<CaseData>("/api/case"),
+      fetchJson<Evidence[]>("/api/evidence"),
+      fetchJson<Person[]>("/api/people"),
+      fetchJson<Location[]>("/api/locations"),
+      fetchJson<TimelineEvent[]>("/api/timeline"),
     ]);
 
   return {
