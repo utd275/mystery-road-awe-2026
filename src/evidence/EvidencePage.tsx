@@ -1,5 +1,6 @@
 import {
   type ChangeEvent,
+  useEffect,
   useReducer,
   useState,
 } from "react";
@@ -108,6 +109,129 @@ export default function EvidencePage({
     evidenceFilterReducer,
     initialEvidenceFilterState
   );
+
+  const [raceRequest, setRaceRequest] =
+    useState<"slow" | "fast" | null>(
+      null
+    );
+
+  const [raceResult, setRaceResult] =
+    useState(
+      "No race request started yet."
+    );
+  
+  /* (Exercise 6 - Demo 7)
+  useEffect(() => {
+    if (!raceRequest) {
+      return;
+    }
+
+    const delay =
+      raceRequest === "slow"
+        ? 3000
+        : 300;
+
+    const label =
+      raceRequest === "slow"
+        ? "Slow request"
+        : "Fast request";
+
+    setRaceResult(
+      `${label} started...`
+    );
+
+    fetch(
+      `/api/evidence?delay=${delay}`
+    )
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(
+            "Request failed"
+          );
+        }
+
+        return response.json();
+      })
+      .then(() => {
+        setRaceResult(
+          `${label} finished and updated the UI.`
+        );
+      })
+      .catch((error: unknown) => {
+        console.error(error);
+
+        setRaceResult(
+          `${label} failed.`
+        );
+      });
+  }, [raceRequest]);
+  */
+
+  useEffect(() => {
+    if (!raceRequest) {
+      return;
+    }
+
+    const controller =
+      new AbortController();
+
+    const delay =
+      raceRequest === "slow"
+        ? 3000
+        : 300;
+
+    const label =
+     raceRequest === "slow"
+        ? "Slow request"
+        : "Fast request";
+
+    setRaceResult(
+      `${label} started...`
+    );
+
+    fetch(
+      `/api/evidence?delay=${delay}`,
+      {
+        signal: controller.signal,
+      }
+    )
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(
+            "Request failed"
+          );
+        }
+
+        return response.json();
+      })
+      .then(() => {
+        setRaceResult(
+          `${label} finished and updated the UI.`
+        );
+      })
+      .catch((error: unknown) => {
+        if (
+          error instanceof DOMException &&
+          error.name === "AbortError"
+        ) {
+          console.log(
+            `[Demo 7] ${label} aborted`
+          );
+
+          return;
+        }
+
+        console.error(error);
+
+        setRaceResult(
+          `${label} failed.`
+        );
+      });
+
+    return () => {
+      controller.abort();
+    };
+  }, [raceRequest]);
 
   const {
     searchTerm,
@@ -273,6 +397,30 @@ export default function EvidencePage({
   return (
     <section className="view active">
       <h2>Evidence Catalogue</h2>
+
+      <div>
+        <h3>Demo 7 — Request race</h3>
+
+        <button
+          type="button"
+          onClick={() => {
+            setRaceRequest("slow");
+          }}
+        >
+          Start slow request
+        </button>
+
+        <button
+          type="button"
+          onClick={() => {
+            setRaceRequest("fast");
+          }}
+        >
+          Start fast request
+        </button>
+
+        <p>{raceResult}</p>
+      </div>
 
       <div className="toolbar">
         <div className="toolbar-row">
