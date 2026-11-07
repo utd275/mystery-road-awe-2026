@@ -56,3 +56,40 @@ be enabled. The layout targets common desktop and tablet widths.
 This is an existing brownfield application, not a fresh scaffold. It works for everyday use, but
 you should expect to find rough edges, inconsistent patterns, and a handful of bugs as you work
 with it — that discovery process is part of the course.
+
+## Local development backend
+
+Exercise 6 adds a small local Express backend for development.
+
+Start the frontend:
+
+```bash
+npm run dev
+```
+
+Start the backend in a second terminal:
+
+```bash
+npm run server
+```
+
+The backend runs on:
+
+```text
+http://localhost:3001
+```
+
+Available read-only endpoints:
+
+- `/api/case`
+- `/api/evidence`
+- `/api/people`
+- `/api/locations`
+- `/api/timeline`
+
+Testing controls:
+
+- `?delay=3000` adds an artificial 3-second delay.
+- `?fail=true` returns a simulated HTTP 500 error.
+
+The backend is for local development only and is not deployed with the GitHub Pages frontend.
