@@ -52,7 +52,8 @@ function wait(ms) {
 async function sendData(
   req,
   res,
-  filename
+  filename,
+  emptyValue = null
 ) {
   if (shouldFail(req)) {
     res.status(500).json({
@@ -66,6 +67,14 @@ async function sendData(
 
   if (delay > 0) {
     await wait(delay);
+  }
+
+  if (
+    req.query.empty === "true" &&
+    emptyValue !== null
+  ) {
+    res.json(emptyValue);
+    return;
   }
 
   try {
@@ -92,7 +101,8 @@ app.get("/api/evidence", (req, res) => {
   void sendData(
     req,
     res,
-    "evidence.json"
+    "evidence.json",
+    []
   );
 });
 

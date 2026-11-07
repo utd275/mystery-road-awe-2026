@@ -454,10 +454,19 @@ export default function EvidencePage({
         </div>
       </div>
 
-      {displayedEvidence.length === 0 ? (
+      {evidence.length === 0 ? (
+        <div className="evidence-loading">
+          <h3>No evidence available</h3>
+          <p>
+            The request succeeded, but this
+            case currently contains no
+            evidence.
+          </p>
+        </div>
+      ) : displayedEvidence.length === 0 ? (
         <p>
           No evidence matches the current
-          search.
+          search or filters.
         </p>
       ) : (
         <div className="evidence-grid">

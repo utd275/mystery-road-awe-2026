@@ -317,7 +317,12 @@ function App() {
       return (
         <section className="view active">
           <h2>Evidence Catalogue</h2>
-          <p>{loadError}</p>
+
+          <div role="alert">
+            <h3>Evidence could not be loaded</h3>
+
+            <p>{loadError}</p>
+          </div>
         </section>
       );
     }
@@ -326,7 +331,17 @@ function App() {
       return (
         <section className="view active">
           <h2>Evidence Catalogue</h2>
-          <p>Loading evidence...</p>
+
+          <div className="evidence-loading">
+            <div className="spinner" />
+
+            <h3>Loading evidence...</h3>
+
+            <p>
+              Waiting for the backend
+              response.
+            </p>
+          </div>
         </section>
       );
     }
